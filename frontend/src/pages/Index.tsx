@@ -9,9 +9,9 @@ const Index = () => {
     setUser(userData);
   };
 
-  const handleLogout = () => {
-    setUser(null);
-  };
+  // const handleLogout = () => {
+  //   setUser(null);
+  // };
 
   if (!user) {
     return <AuthForm onLogin={handleLogin} />;
