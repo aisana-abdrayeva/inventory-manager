@@ -2,8 +2,8 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require("cookie-parser");
 const dotenv = require('dotenv');
-const authRoutes = require("./routes/auth");
-const userRoutes = require("./routes/users");
+const session = require('express-session');
+const passport = require('passport');
 
 dotenv.config();
 
@@ -15,12 +15,22 @@ app.use(cors(
     }
 ));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.use("/api/auth", authRoutes);  
-app.use("/api/users", userRoutes); 
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+}));
 
-const PORT = process.env.PORT;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use("/api/auth", require("./routes/auth"));  
+app.use("/api/social-auth", require("./routes/socialAuth"));
+// app.use("/api/users", require("./routes/users")); 
+
+app.listen(5000, () => {
+    console.log(`Server running on port 5000`);
 });

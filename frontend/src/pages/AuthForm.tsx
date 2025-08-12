@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import { login, register } from '../api/auth'; 
+import { login, register } from '../services/auth/auth'; 
 
 interface AuthFormProps {
     onLogin: (user: { id: string; name: string; email: string }) => void;
@@ -42,8 +42,11 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                     name: response.user.name,
                     email: response.user.email,
                 });
-            } else {
-                console.error("Registration failed. Please try again.");
+            } else if (!email || !password || !name) {
+                setError("Missing fields. Please fill in all required fields.");
+            }
+            else {
+                setError("Registration failed. Please try again.");
             }
         }
     } catch (err: any) {

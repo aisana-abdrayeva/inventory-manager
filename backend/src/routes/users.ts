@@ -1,103 +1,97 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
 const { PrismaClient, UserStatus } = require('@prisma/client');
-const dotenv = require("dotenv");
-
-dotenv.config();
+const authGuard = require('../middlewares/authGuard'); 
 
 const router = express.Router();
 const prisma = new PrismaClient();
-const JWT_SECRET = process.env.JWT_SECRET;
 
-router.post("/register", async (req: any, res: any) => {
-  const { name, email, password } = req.body;
-
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "Missing fields" });
-  }
-
-  const passwordHash = await bcrypt.hash(password, 10);
-
-  try {
-    const newUser = await prisma.user.create({
-      data: {
-        name,
-        email,
-        passwordHash,
-        status: UserStatus.ACTIVE,
-      },
+router.get("/", authGuard, async (_:any, res:any) => {
+    try {
+    const users = await prisma.user.findMany({
+        select: {
+        id: true,
+        name: true,
+        email: true,
+        lastLogin: true,
+        role: true,
+        status: true,
+        },
+        orderBy: { lastLogin: 'desc' },
     });
 
-    const token = jwt.sign({ userId: newUser.id }, JWT_SECRET, { expiresIn: "1h" });
-
-    res.cookie("accessToken", token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "None",
-      maxAge: 60 * 60 * 1000
-    });
-
-    res.status(201).json({
-      token,
-      user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        status: newUser.status
-      }
-    });
-
-  } catch (error: any) {
-    if (
-      error.code === "P2002" &&
-      error.meta?.target?.includes("email")
-    ) {
-      return res.status(409).json({ error: "User with this email already exists" });
+    res.json(users);
+    } catch (error) {
+    res.status(500).json({ error: "Could not fetch users" });
     }
-
-    console.error("Unexpected error during registration:", error);
-    return res.status(500).json({ error: "Internal server error" });
-  }
 });
 
-
-router.post("/login", async (req:any, res:any) => {
-  const { email, password } = req.body;
-
-  const user = await prisma.user.findUnique({ where: { email } });
-  if (!user || user.status === UserStatus.BLOCKED) {
-    return res.status(403).json({ error: "User not found or blocked" });
-  }
-
-  const valid = await bcrypt.compare(password, user.passwordHash);
-  if (!valid) {
-    return res.status(401).json({ error: "Invalid password" });
-  }
-
-  await prisma.user.update({
-    where: { id: user.id },
-    data: { lastLogin: new Date() },
-  });
-
-  const token = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: "1h" });
-
-  res.cookie("accessToken", token, {
-    httpOnly: true,
-    secure: true, 
-    sameSite: "None", 
-    maxAge: 60 * 60 * 1000 
-  });
-
-  res.status(200).json({ 
-    token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      status: user.status
+router.post("/:userId/block", authGuard, async (req:any, res:any) => {
+    try {
+        const { userId } = req.params;
+        const user = await prisma.user.findUnique({ 
+            where: { id: parseInt(userId) } 
+        });
+        
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        
+        await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: { status: UserStatus.BLOCKED }
+        });
+        
+        res.json({ message: "User blocked successfully" });
+    } catch (error) {
+        console.error("Error blocking user:", error);
+        res.status(500).json({ error: "Could not block user" });
     }
-  });
+});
+
+router.post("/:userId/unblock", authGuard, async (req:any, res:any) => {
+    try {
+        const { userId } = req.params;
+        
+        const user = await prisma.user.findUnique({ 
+            where: { id: parseInt(userId) } 
+        });
+        
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        
+        await prisma.user.update({
+            where: { id: parseInt(userId) },
+            data: { status: UserStatus.ACTIVE }
+        });
+        
+        res.json({ message: "User unblocked successfully" });
+    } catch (error) {
+        console.error("Error unblocking user:", error);
+        res.status(500).json({ error: "Could not unblock user" });
+    }
+});
+
+router.delete("/:userId", authGuard, async (req:any, res:any) => {
+    try {
+        const { userId } = req.params;
+        
+        const user = await prisma.user.findUnique({ 
+            where: { id: parseInt(userId) } 
+        });
+        
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+        await prisma.user.delete({
+            where: { id: parseInt(userId) }
+        });
+        
+        res.json({ message: "User deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting user:", error);
+        res.status(500).json({ error: "Could not delete user" });
+    }
 });
 
 module.exports = router;
