@@ -18,7 +18,6 @@ router.get("/", authGuard, async (_:any, res:any) => {
         },
         orderBy: { lastLogin: 'desc' },
     });
-
     res.json(users);
     } catch (error) {
     res.status(500).json({ error: "Could not fetch users" });

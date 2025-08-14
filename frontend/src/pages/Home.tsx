@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AuthForm } from "./AuthForm";
-// import { Admin } from "./Admin";
+import { Admin } from "./Admin";
 
 const Home = () => {
   const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
@@ -17,7 +17,7 @@ const Home = () => {
     return <AuthForm onLogin={handleLogin} />;
   }
 
-  // return <Admin currentUser={user} onLogout={handleLogout} />;
+  return <Admin currentUser={user} onLogout={handleLogout} />;
 };
 
 export default Home;

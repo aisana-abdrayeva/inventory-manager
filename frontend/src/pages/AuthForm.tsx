@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+import { Form, Button, Container } from 'react-bootstrap';
 import { login, register } from '../services/auth/auth'; 
 
 interface AuthFormProps {
@@ -108,9 +106,12 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                             <Button variant="primary" type="submit" className="flex-fill">
                             {loading ? "Processing.." : (isLogin ? ( "Sign In" ) : ( "Sign Up" ))}
                             </Button> 
-                            <Button variant="light" type="button" className="flex-fill"  onClick={() => setIsLogin(!isLogin)}>
+                            <Button variant="outline-primary" type="button" className="flex-fill"  onClick={() => setIsLogin(!isLogin)}>
                                 {isLogin ? ("Doesn't have an account? Sign Up") : ("Already have an account? Sign In")}
                             </Button>
+                        </div>
+                        <div className="d-flex justify-content-center mt-3"> 
+                            {isLogin && (<Button variant="light"onClick={() => window.location.href = '/auth/google'}>Login with Google</Button>)}
                         </div>
                 </Form>
         </Container>
