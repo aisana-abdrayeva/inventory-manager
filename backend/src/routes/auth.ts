@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
 router.post("/register", async (req: any, res: any) => {
+    
     const { name, email, password } = req.body;
 
     const passwordHash = await bcrypt.hash(password, 10);
