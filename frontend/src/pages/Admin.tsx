@@ -108,7 +108,7 @@ const hasBlockedUsers = useMemo(() =>
     ), [selectedUsers, users]);
 
 return (
-    <div className="min-h-screen bg-background">
+    <div style={{ minHeight: '100vh', backgroundColor: '#f5f5f5' }}> 
     {/* Header */}
     <header className="bg-light border-bottom">
         <Container fluid>
