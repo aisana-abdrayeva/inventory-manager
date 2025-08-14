@@ -27,7 +27,7 @@ app.use(cookieParser());
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use("auth", require("./routes/auth"));  
+app.use("/auth", require("./routes/auth"));  
 // app.use("/api/social-auth", require("./routes/socialAuth"));
 // app.use("/api/users", require("./routes/users")); 
 
