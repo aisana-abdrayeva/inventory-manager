@@ -14,6 +14,7 @@ app.use(cors(
         credentials: true,
     }
 ));
+//https://inventory-manager-production-7ab5.up.railway.app
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));

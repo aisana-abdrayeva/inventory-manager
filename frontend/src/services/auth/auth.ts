@@ -12,7 +12,7 @@ interface RegisterData {
 
 export const login = async (data: LoginData) => {
     try {
-        const response = await api.post('/api/auth/login', data);
+        const response = await api.post('/auth/login', data);
         return response.data;
     } catch (error) {
         throw error;
@@ -21,7 +21,7 @@ export const login = async (data: LoginData) => {
 
 export const register = async (data: RegisterData) => {
     try {
-        const response = await api.post('/api/auth/register', data);
+        const response = await api.post('/auth/register', data);
         return response.data;
     } catch (error) {
         throw error;
