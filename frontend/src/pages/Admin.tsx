@@ -20,7 +20,7 @@ interface AdminProps {
 export const Admin = ({ currentUser, onLogout }: AdminProps) => {
 const [users, setUsers] = useState<User[]>([]);
 const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-const [loading, setLoading] = useState(false);
+const [, setLoading] = useState(false);
 
 const allSelected = selectedUsers.size === users.length && users.length > 0;
 
