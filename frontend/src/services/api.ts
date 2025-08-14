@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000/api",
+    baseURL: "inventory-manager-backend-production-7a87.up.railway.app/api",
     withCredentials: true, 
 });
 
