@@ -9,7 +9,8 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-    origin: 'https://inventory-manager-production-7ab5.up.railway.app'
+    origin: ['https://inventory-manager-production-7ab5.up.railway.app', 'http://localhost:5173'],
+    credentials: true,
   }));
 
 app.use(express.json());
