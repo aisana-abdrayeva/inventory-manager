@@ -4,7 +4,7 @@ const authGuard = require('../middlewares/authGuard');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", authGuard, async (_:any, res:any) => {
+router.get("/", authGuard, async (_, res) => {
     try {
     const users = await prisma.user.findMany({
         select: {
@@ -23,7 +23,7 @@ router.get("/", authGuard, async (_:any, res:any) => {
     }
 });
 
-router.post("/:userId/block", authGuard, async (req:any, res:any) => {
+router.post("/:userId/block", authGuard, async (req, res) => {
     try {
         const { userId } = req.params;
         const user = await prisma.user.findUnique({ 
@@ -36,7 +36,7 @@ router.post("/:userId/block", authGuard, async (req:any, res:any) => {
         
         await prisma.user.update({
             where: { id: parseInt(userId) },
-            data: { status: UserStatus.BLOCKED }
+            data: { status: UserStatus.blocked }
         });
         
         res.json({ message: "User blocked successfully" });
@@ -46,7 +46,7 @@ router.post("/:userId/block", authGuard, async (req:any, res:any) => {
     }
 });
 
-router.post("/:userId/unblock", authGuard, async (req:any, res:any) => {
+router.post("/:userId/unblock", authGuard, async (req, res) => {
     try {
         const { userId } = req.params;
         
@@ -60,7 +60,7 @@ router.post("/:userId/unblock", authGuard, async (req:any, res:any) => {
         
         await prisma.user.update({
             where: { id: parseInt(userId) },
-            data: { status: UserStatus.ACTIVE }
+            data: { status: UserStatus.active }
         });
         
         res.json({ message: "User unblocked successfully" });
@@ -70,7 +70,7 @@ router.post("/:userId/unblock", authGuard, async (req:any, res:any) => {
     }
 });
 
-router.delete("/:userId", authGuard, async (req:any, res:any) => {
+router.delete("/:userId", authGuard, async (req, res) => {
     try {
         const { userId } = req.params;
         

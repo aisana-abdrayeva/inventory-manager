@@ -10,7 +10,9 @@ const router = express.Router();
 const prisma = new PrismaClient();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
-router.post("/register", async (req: any, res: any) => {
+router.post("/register", async (req, res) => {
+    console.log("Register endpoint hit");
+    console.log("Request body:", req.body);
     
     const { name, email, password } = req.body;
 
@@ -46,7 +48,7 @@ router.post("/register", async (req: any, res: any) => {
         }
     });
 
-} catch (error: any) {
+} catch (error) {
     if (
         error.code === "P2002" &&
         error.meta?.target?.includes("email")
@@ -59,7 +61,7 @@ router.post("/register", async (req: any, res: any) => {
 }
 });
 
-router.post("/login", async (req:any, res:any) => {
+router.post("/login", async (req, res) => {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
