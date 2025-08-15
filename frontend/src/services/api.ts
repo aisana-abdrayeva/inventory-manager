@@ -4,8 +4,8 @@ import dotenv from "dotenv"
 dotenv.config();
 
 const api = axios.create({
-    baseURL: process.env.BACKEND_URL,
+    baseURL: "inventory-manager-backend-production-7a87.up.railway.app",
     withCredentials: true, 
 });
-//inventory-manager-backend-production-7a87.up.railway.app
+
 export default api;
