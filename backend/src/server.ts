@@ -17,10 +17,14 @@ app.use((req, res, next) => {
 
 app.use(cors(
     {
-        origin: [process.env.FRONTEND_URL || "https://inventory-manager-production-7ab5.up.railway.app"],
+        origin: ["https://inventory-manager-production-7ab5.up.railway.app"],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     }
 ));
+
+
 
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
