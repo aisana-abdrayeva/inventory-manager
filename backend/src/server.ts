@@ -8,18 +8,16 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-
-
 app.use(cors(
     {
-        origin: ["https://inventory-manager-production-7ab5.up.railway.app"],
+        origin: ["https://inventory-manager-production-7ab5.up.railway.app", "http://localhost:5173"],
         methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     }
 ));
 
-app.options('*', cors());
+app.options('/api/*', cors());  
 app.use(express.json());
 // app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -32,11 +30,6 @@ app.use(cookieParser());
 
 // app.use(passport.initialize());
 // app.use(passport.session());
-
-// Test route
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'Backend is working!' });
-});
 
 app.use("/api/auth", require("./routes/auth")); 
 // app.use("/api/social-auth", require("./routes/socialAuth"));
