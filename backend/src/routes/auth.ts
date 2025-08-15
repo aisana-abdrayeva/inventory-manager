@@ -50,8 +50,8 @@ router.post("/register", async (req, res) => {
 
 } catch (error) {
     if (
-        error.code === "P2002" &&
-        error.meta?.target?.includes("email")
+        (error as any).code === "P2002" &&
+        (error as any).meta?.target?.includes("email")
     ) {
     return res.status(409).json({ error: "User with this email already exists" });
     }
