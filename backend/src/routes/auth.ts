@@ -30,12 +30,12 @@ router.post("/register", async (req, res) => {
 
     const accessToken = jwt.sign({ userId: newUser.id }, ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-    res.cookie("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-        maxAge: 60 * 60 * 1000
-    });
+    // res.cookie("accessToken", accessToken, {
+    //     httpOnly: true,
+    //     secure: true,
+    //     sameSite: "None",
+    //     maxAge: 60 * 60 * 1000
+    // });
 
     res.status(201).json({
         accessToken,
