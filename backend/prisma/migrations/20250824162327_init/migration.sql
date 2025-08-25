@@ -1,11 +1,23 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "public"."UserStatus" AS ENUM ('active', 'blocked');
 
-  - Added the required column `role` to the `User` table without a default value. This is not possible if the table is not empty.
+-- CreateEnum
+CREATE TYPE "public"."UserRole" AS ENUM ('user', 'admin');
 
-*/
--- AlterTable
-ALTER TABLE "public"."User" ADD COLUMN     "role" TEXT NOT NULL;
+-- CreateTable
+CREATE TABLE "public"."User" (
+    "id" SERIAL NOT NULL,
+    "name" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "passwordHash" TEXT NOT NULL,
+    "status" "public"."UserStatus" NOT NULL DEFAULT 'active',
+    "role" "public"."UserRole" NOT NULL DEFAULT 'user',
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    "lastLogin" TIMESTAMP(3),
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
 
 -- CreateTable
 CREATE TABLE "public"."Inventory" (
@@ -17,6 +29,7 @@ CREATE TABLE "public"."Inventory" (
     "ownerId" INTEGER NOT NULL,
     "public" BOOLEAN NOT NULL,
     "imageUrl" TEXT,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Inventory_pkey" PRIMARY KEY ("id")
 );
@@ -61,6 +74,9 @@ CREATE TABLE "public"."Like" (
 
     CONSTRAINT "Like_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Like_inventoryId_userId_key" ON "public"."Like"("inventoryId", "userId");

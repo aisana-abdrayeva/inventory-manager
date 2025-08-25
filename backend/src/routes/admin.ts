@@ -1,5 +1,5 @@
 const express = require('express');
-const { PrismaClient, UserStatus } = require('@prisma/client');
+const { PrismaClient, UserStatus, UserRole } = require('@prisma/client');
 const authGuard = require('../middlewares/authGuard'); 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -23,7 +23,7 @@ router.get("/", authGuard, async (_, res) => {
     }
 });
 
-router.post("/:userId/block", authGuard, async (req, res) => {
+router.patch("/:userId/block", authGuard, async (req, res) => {
     try {
         const { userId } = req.params;
         const user = await prisma.user.findUnique({ 
@@ -46,7 +46,7 @@ router.post("/:userId/block", authGuard, async (req, res) => {
     }
 });
 
-router.post("/:userId/unblock", authGuard, async (req, res) => {
+router.patch("/:userId/unblock", authGuard, async (req, res) => {
     try {
         const { userId } = req.params;
         
@@ -91,5 +91,37 @@ router.delete("/:userId", authGuard, async (req, res) => {
         res.status(500).json({ error: "Could not delete user" });
     }
 });
+
+router.patch("/:userId/admin", authGuard, async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        await prisma.user.update({
+            where: {id: parseInt(userId)},
+            data: {role: UserRole.admin}
+        })
+
+        res.json("User's role was changed to admin succesfully")
+    } catch (error) {
+        console.error("Error assigning admin role:", error)
+        res.status(500).json({ error: "Could not assign admin role" });
+    }
+})
+
+router.patch("/:userId/user", authGuard, async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        await prisma.user.update({
+            where: {id: parseInt(userId)},
+            data: {role: UserRole.user}
+        })
+
+        res.json("User's role was changed to user succesfully")
+    } catch (error) {
+        console.error("Error assigning userr role:", error)
+        res.status(500).json({ error: "Could not assign user role" });
+    }
+})
 
 module.exports = router;
