@@ -10,6 +10,8 @@
       "module": "commonjs",
       "target": "esnext",
       "typeRoots": ["./node_modules/@types"],
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
       // For nodejs:
       // "lib": ["esnext"],
       // "types": ["node"],

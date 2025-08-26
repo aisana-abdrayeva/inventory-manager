@@ -49,9 +49,10 @@ router.post("/register", async (req, res) => {
     });
 
 } catch (error) {
+    const prismaError = error as PrismaError;
     if (
-        (error as any).code === "P2002" &&
-        (error as any).meta?.target?.includes("email")
+        prismaError.code === "P2002" &&
+        prismaError.meta?.target?.includes("email")
     ) {
     return res.status(409).json({ error: "User with this email already exists" });
     }

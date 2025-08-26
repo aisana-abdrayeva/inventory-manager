@@ -2,15 +2,7 @@ import { useState, useMemo, useEffect } from "react";
 import { Trash2, Unlock, Lock } from "lucide-react";
 import { Button, Form, Table, Container, Row, Col } from 'react-bootstrap';
 import { getUsers, blockUser, unblockUser, deleteUser } from "../services/users/users";
-
-interface User {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    lastLogin: string;
-    status: "active" | "blocked";
-}
+import { User, UserStatus } from "../types";
 
 interface AdminProps {
     currentUser: { id: string; name: string; email: string };
@@ -38,7 +30,7 @@ const handleSelectAll = () => {
     if (allSelected) {
         setSelectedUsers(new Set());
     } else {
-        setSelectedUsers(new Set(users.map((user: any) => user.id)));
+        setSelectedUsers(new Set(users.map((user: User) => user.id)));
     }
 };
 
@@ -59,8 +51,8 @@ const handleBlock = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await blockUser(userId);
-    setUsers(users.map((user: any) => 
-        selectedUsers.has(user.id) ? { ...user, status: "blocked" as const } : user
+    setUsers(users.map((user: User) => 
+        selectedUsers.has(user.id) ? { ...user, status: UserStatus.BLOCKED } : user
     ));
     setSelectedUsers(new Set());
     console.log(`${selectedUsers.size} user(s) have been blocked.`);
@@ -76,8 +68,8 @@ const handleUnblock = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await unblockUser(userId);
-    setUsers(users.map((user: any) => 
-        selectedUsers.has(user.id) ? { ...user, status: "active" as const } : user
+    setUsers(users.map((user: User) => 
+        selectedUsers.has(user.id) ? { ...user, status: UserStatus.ACTIVE } : user
     ));
     setSelectedUsers(new Set());
     console.log(`${selectedUsers.size} user(s) have been unblocked.`);
@@ -93,7 +85,7 @@ const handleDelete = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await deleteUser(userId);
-    setUsers(users.filter((user: any) => !selectedUsers.has(user.id)));
+    setUsers(users.filter((user: User) => !selectedUsers.has(user.id)));
     setSelectedUsers(new Set());
     console.log(`${selectedUsers.size} user(s) have been deleted.`);
     } catch (error) {
@@ -103,8 +95,8 @@ const handleDelete = async () => {
 
 const selectedCount = selectedUsers.size;
 const hasBlockedUsers = useMemo(() => 
-    Array.from(selectedUsers).some((id: any) => 
-    users.find((user: any) => user.id === id)?.status === "blocked"
+    Array.from(selectedUsers).some((id: string) => 
+    users.find((user: User) => user.id === id)?.status === UserStatus.BLOCKED
     ), [selectedUsers, users]);
 
 return (
@@ -205,7 +197,7 @@ return (
                 <td>
                     <div
                     className={`badge ${
-                        user.status === 'active'
+                        user.status === UserStatus.ACTIVE
                         ? 'bg-primary text-white'
                         : 'bg-danger text-white'
                     }`}

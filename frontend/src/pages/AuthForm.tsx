@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Form, Button, Container } from 'react-bootstrap';
-import { login, register } from '../services/auth/auth'; 
+import { login, register } from '../services/auth/auth';
+import { LoginData, RegisterData, AuthResponse, ApiError, ChangeEvent } from '../types'; 
 
 interface AuthFormProps {
     onLogin: (user: { id: string; name: string; email: string }) => void;
@@ -14,14 +15,15 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
         setError("");
 
     try {
         if (isLogin) {
-            const response = await login ({email, password});
+            const loginData: LoginData = { email, password };
+            const response: AuthResponse = await login(loginData);
             if (response.user && response.user.id) {
                 onLogin({
                     id: response.user.id,
@@ -30,10 +32,11 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                 });
             }
             else {
-                console.error("Registration failed. Please try again.");
+                console.error("Login failed. Please try again.");
             }
     } else {
-            const response = await register({ name, email, password });
+            const registerData: RegisterData = { name, email, password };
+            const response: AuthResponse = await register(registerData);
             if (response.user && response.user.id) {
                 onLogin({
                     id: response.user.id,
@@ -47,12 +50,13 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                 setError("Registration failed. Please try again.");
             }
         }
-    } catch (err: any) {
+    } catch (err: unknown) {
         console.error("Authentication error:", err);
-        if(err.response?.status === 409)  {
+        const apiError = err as ApiError;
+        if(apiError.response?.status === 409)  {
             setError("Email already exists. Please use a different email.");
-        } else if (err.response?.data?.error) {
-            setError(err.response.data.error);
+        } else if (apiError.response?.data?.error) {
+            setError(apiError.response.data.error);
         } else {
             setError("An error occurred. Please try again.");
         }
@@ -73,7 +77,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                                 type="text" 
                                 value={name}
                                 placeholder="Enter your name" 
-                                onChange={(e: any) => setName(e.target.value)}
+                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                                 required
                                 />
                             </Form.Group>
@@ -84,7 +88,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                             type="email" 
                             value={email}
                             placeholder="Enter your email" 
-                            onChange={(e: any) => setEmail(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             required
                             />
                         </Form.Group>
@@ -94,7 +98,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                             type="password" 
                             value={password}
                             placeholder="Enter your password"
-                            onChange={(e: any) => setPassword(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                             />
                         </Form.Group>
                         {error && (

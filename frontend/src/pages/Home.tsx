@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AuthForm } from "./AuthForm";
 import { Admin } from "./Admin";
 
+
 const Home = () => {
   const [user, setUser] = useState<{ id: string; name: string; email: string } | null>(null);
 
