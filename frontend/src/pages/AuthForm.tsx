@@ -73,7 +73,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                                 type="text" 
                                 value={name}
                                 placeholder="Enter your name" 
-                                onChange={(e) => setName(e.target.value)}
+                                onChange={(e: any) => setName(e.target.value)}
                                 required
                                 />
                             </Form.Group>
@@ -84,7 +84,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                             type="email" 
                             value={email}
                             placeholder="Enter your email" 
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e: any) => setEmail(e.target.value)}
                             required
                             />
                         </Form.Group>
@@ -94,7 +94,7 @@ export const AuthForm = ({ onLogin }: AuthFormProps) => {
                             type="password" 
                             value={password}
                             placeholder="Enter your password"
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e: any) => setPassword(e.target.value)}
                             />
                         </Form.Group>
                         {error && (

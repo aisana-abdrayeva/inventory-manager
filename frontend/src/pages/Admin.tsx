@@ -38,7 +38,7 @@ const handleSelectAll = () => {
     if (allSelected) {
         setSelectedUsers(new Set());
     } else {
-        setSelectedUsers(new Set(users.map(user => user.id)));
+        setSelectedUsers(new Set(users.map((user: any) => user.id)));
     }
 };
 
@@ -59,7 +59,7 @@ const handleBlock = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await blockUser(userId);
-    setUsers(users.map(user => 
+    setUsers(users.map((user: any) => 
         selectedUsers.has(user.id) ? { ...user, status: "blocked" as const } : user
     ));
     setSelectedUsers(new Set());
@@ -76,7 +76,7 @@ const handleUnblock = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await unblockUser(userId);
-    setUsers(users.map(user => 
+    setUsers(users.map((user: any) => 
         selectedUsers.has(user.id) ? { ...user, status: "active" as const } : user
     ));
     setSelectedUsers(new Set());
@@ -93,7 +93,7 @@ const handleDelete = async () => {
     const userId = selectedUsers.values().next().value;
     if (!userId) return;
     await deleteUser(userId);
-    setUsers(users.filter(user => !selectedUsers.has(user.id)));
+    setUsers(users.filter((user: any) => !selectedUsers.has(user.id)));
     setSelectedUsers(new Set());
     console.log(`${selectedUsers.size} user(s) have been deleted.`);
     } catch (error) {
@@ -103,8 +103,8 @@ const handleDelete = async () => {
 
 const selectedCount = selectedUsers.size;
 const hasBlockedUsers = useMemo(() => 
-    Array.from(selectedUsers).some(id => 
-    users.find(user => user.id === id)?.status === "blocked"
+    Array.from(selectedUsers).some((id: any) => 
+    users.find((user: any) => user.id === id)?.status === "blocked"
     ), [selectedUsers, users]);
 
 return (
