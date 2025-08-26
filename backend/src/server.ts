@@ -1,9 +1,9 @@
-const express = require('express');
-const cors = require('cors');
-// const cookieParser = require("cookie-parser");
-const dotenv = require('dotenv');
-// const session = require('express-session');
-// const passport = require('passport');
+import express from 'express';
+import cors from 'cors';
+import cookieParser from "cookie-parser";
+import dotenv from 'dotenv';
+import session from 'express-session';
+import passport from 'passport';
 
 dotenv.config();
 
@@ -16,8 +16,8 @@ app.use(cors({
 }));
 
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
-// app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 // app.use(session({
 //     secret: process.env.SESSION_SECRET,
