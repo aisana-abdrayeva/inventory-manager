@@ -9,7 +9,7 @@ router.get('/google', passport.authenticate('google', {
 
 router.get('/google/callback', passport.authenticate('google', {
   failureRedirect: '/login',
-}), (req, res) => {
+}), (req: any, res: any) => {
   res.redirect('/');
 });
 
@@ -19,7 +19,7 @@ router.get('/facebook', passport.authenticate('facebook', {
 
 router.get('/facebook/callback', passport.authenticate('facebook', {
   failureRedirect: '/login',
-}), (req, res) => {
+}), (req: any, res: any) => {
   res.redirect('/');
 });
 

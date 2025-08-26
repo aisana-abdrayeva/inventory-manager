@@ -7,12 +7,13 @@
   
       // Environment Settings
       // See also https://aka.ms/tsconfig/module
-      "module": "NodeNext",
+      "module": "commonjs",
       "target": "esnext",
+      "types": ["node", "express", "jsonwebtoken", "cookie-parser", "passport", 
+      "passport-google-oauth20", "passport-facebook"],
       "typeRoots": ["./node_modules/@types"],
       "esModuleInterop": true,
       "allowSyntheticDefaultImports": true,
-      "moduleResolution": "NodeNext",
       // For nodejs:
       // "lib": ["esnext"],
       // "types": ["node"],

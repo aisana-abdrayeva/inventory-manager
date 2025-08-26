@@ -4,7 +4,7 @@ const authGuard = require('../middlewares/authGuard');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", authGuard, async (_, res) => {
+router.get("/", authGuard, async (req: any, res: any) => {
     try {
     const users = await prisma.user.findMany({
         select: {
@@ -23,7 +23,7 @@ router.get("/", authGuard, async (_, res) => {
     }
 });
 
-router.patch("/:userId/block", authGuard, async (req, res) => {
+router.patch("/:userId/block", authGuard, async (req: any, res: any) => {
     try {
         const { userId } = req.params;
         const user = await prisma.user.findUnique({ 
@@ -46,7 +46,7 @@ router.patch("/:userId/block", authGuard, async (req, res) => {
     }
 });
 
-router.patch("/:userId/unblock", authGuard, async (req, res) => {
+router.patch("/:userId/unblock", authGuard, async (req: any, res: any) => {
     try {
         const { userId } = req.params;
         
@@ -70,7 +70,7 @@ router.patch("/:userId/unblock", authGuard, async (req, res) => {
     }
 });
 
-router.delete("/:userId", authGuard, async (req, res) => {
+router.delete("/:userId", authGuard, async (req: any, res: any) => {
     try {
         const { userId } = req.params;
         
@@ -92,7 +92,7 @@ router.delete("/:userId", authGuard, async (req, res) => {
     }
 });
 
-router.patch("/:userId/admin", authGuard, async (req, res) => {
+router.patch("/:userId/admin", authGuard, async (req: any, res: any) => {
     try {
         const { userId } = req.params;
 
@@ -108,7 +108,7 @@ router.patch("/:userId/admin", authGuard, async (req, res) => {
     }
 })
 
-router.patch("/:userId/user", authGuard, async (req, res) => {
+router.patch("/:userId/user", authGuard, async (req: any, res: any) => {
     try {
         const { userId } = req.params;
 

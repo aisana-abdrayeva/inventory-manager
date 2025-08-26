@@ -4,7 +4,7 @@ const authGuard = require('../middlewares/authGuard');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", authGuard, async (req, res) => {
+router.get("/", authGuard, async (req: any, res: any) => {
     try {
         const inventories = await prisma.inventory.findMany({
             where: {
@@ -26,7 +26,7 @@ router.get("/", authGuard, async (req, res) => {
     }
 });
 
-router.get("/:inventoryId", authGuard, async (req, res) => {
+router.get("/:inventoryId", authGuard, async (req: any, res: any) => {
     try {
         const { inventoryId } = req.params;
         const inventory = await prisma.inventory.findUnique({
@@ -39,7 +39,7 @@ router.get("/:inventoryId", authGuard, async (req, res) => {
     }
 });
 
-router.post("/", authGuard, async (req, res) => {
+router.post("/", authGuard, async (req: any, res: any) => {
     try {
         const { title, description, category, tags, ownerId, public: isPublic, imageUrl } = req.body;
         const inventory = await prisma.inventory.create({

@@ -10,64 +10,64 @@ const router = express.Router();
 const prisma = new PrismaClient();
 const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req: any, res: any) => {
     console.log("Register endpoint hit");
     console.log("Request body:", req.body);
-    
+
     const { name, email, password } = req.body;
 
     const passwordHash = await bcrypt.hash(password, 10);
     try {
-    const newUser = await prisma.user.create({
-        data: {
-        name,
-        email,
-        passwordHash,
-        status: UserStatus.active,
-        role: UserRole.user,
-    },
-    });
+        const newUser = await prisma.user.create({
+            data: {
+                name,
+                email,
+                passwordHash,
+                status: UserStatus.active,
+                role: UserRole.user,
+            },
+        });
 
-    const accessToken = jwt.sign({ userId: newUser.id }, ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
+        const accessToken = jwt.sign({ userId: newUser.id }, ACCESS_TOKEN_SECRET, { expiresIn: "1h" });
 
-    // res.cookie("accessToken", accessToken, {
-    //     httpOnly: true,
-    //     secure: true,
-    //     sameSite: "None",
-    //     maxAge: 60 * 60 * 1000
-    // });
+        // res.cookie("accessToken", accessToken, {
+        //     httpOnly: true,
+        //     secure: true,
+        //     sameSite: "None",
+        //     maxAge: 60 * 60 * 1000
+        // });
 
-    res.status(201).json({
-        accessToken,
-        user: {
-        id: newUser.id,
-        name: newUser.name,
-        email: newUser.email,
-        status: newUser.status,
-        role: newUser.role,
+        res.status(201).json({
+            accessToken,
+            user: {
+                id: newUser.id,
+                name: newUser.name,
+                email: newUser.email,
+                status: newUser.status,
+                role: newUser.role,
+            }
+        });
+
+    } catch (error) {
+        const prismaError = error as any;
+        if (
+            prismaError.code === "P2002" &&
+            prismaError.meta?.target?.includes("email")
+        ) {
+            return res.status(409).json({ error: "User with this email already exists" });
         }
-    });
 
-} catch (error) {
-    const prismaError = error as PrismaError;
-    if (
-        prismaError.code === "P2002" &&
-        prismaError.meta?.target?.includes("email")
-    ) {
-    return res.status(409).json({ error: "User with this email already exists" });
+        console.error("Unexpected error during registration:", error);
+        return res.status(500).json({ error: "Internal server error" });
     }
-
-    console.error("Unexpected error during registration:", error);
-    return res.status(500).json({ error: "Internal server error" });
-}
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", async (req: any, res: any) => {
     const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({ where: { email } });
-        if (!user || user.status === UserStatus.blocked) {
-            return res.status(403).json({ error: "User not found or blocked" });
+    if (!user || user.status === UserStatus.blocked) {
+        return res.status(403).json({ error: "User not found or blocked" });
     }
 
     const valid = await bcrypt.compare(password, user.passwordHash);
@@ -84,18 +84,18 @@ router.post("/login", async (req, res) => {
 
     res.cookie("accessToken", accessToken, {
         httpOnly: true,
-        secure: true, 
-        sameSite: "None", 
-        maxAge: 60 * 60 * 1000 
+        secure: true,
+        sameSite: "None",
+        maxAge: 60 * 60 * 1000
     });
 
-    res.status(200).json({ 
+    res.status(200).json({
         accessToken,
         user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        status: user.status
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            status: user.status
         }
     });
 });

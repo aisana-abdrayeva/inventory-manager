@@ -4,7 +4,7 @@ const authGuard = require('../middlewares/authGuard');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/inventories/", authGuard, async (req, res) => {
+router.get("/inventories/", authGuard, async (req: any, res: any) => {
     try {
         const inventories = await prisma.inventory.findMany({
             where: {

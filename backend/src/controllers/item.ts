@@ -4,7 +4,7 @@ const authGuard = require('../middlewares/authGuard');
 const router = express.Router();
 const prisma = new PrismaClient();
 
-router.get("/", authGuard, async (req, res) => {
+router.get("/", authGuard, async (req: any, res: any) => {
     try {
         const items = await prisma.inventoryItem.findMany({
             where: {
@@ -18,7 +18,7 @@ router.get("/", authGuard, async (req, res) => {
     }
 });
 
-router.get("/:id", authGuard, async (req, res) => {
+router.get("/:id", authGuard, async (req: any, res: any) => {
     try {
         const item = await prisma.inventoryItem.findUnique({
             where: { id: req.params.id },
@@ -30,7 +30,7 @@ router.get("/:id", authGuard, async (req, res) => {
     }
 });
 
-router.post("/", authGuard, async (req, res) => {
+router.post("/", authGuard, async (req: any, res: any) => {
     try {
         const { inventoryId, customId, createdById } = req.body;
         const item = await prisma.inventoryItem.create({
@@ -47,7 +47,7 @@ router.post("/", authGuard, async (req, res) => {
     }
 });
 
-router.put("/:id", authGuard, async (req, res) => {
+router.put("/:id", authGuard, async (req: any, res: any) => {
     try {
         const { inventoryId, customId, createdById } = req.body;
         const item = await prisma.inventoryItem.update({
@@ -65,7 +65,7 @@ router.put("/:id", authGuard, async (req, res) => {
     }
 });
 
-router.delete("/:id", authGuard, async (req, res) => {
+router.delete("/:id", authGuard, async (req: any, res: any) => {
     try {
         const item = await prisma.inventoryItem.delete({
             where: { id: req.params.id },

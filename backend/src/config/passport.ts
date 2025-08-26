@@ -9,7 +9,7 @@ passport.use(new GoogleStrategy({
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     callbackURL: process.env.GOOGLE_CALLBACK_URL,
     passretReqToCallback: true,
-}, async (accessToken, refreshToken, profile, done) => {
+}, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
         let user = await User.findOne({ googleId: profile.id });
         if (!user) {
@@ -32,7 +32,7 @@ passport.use(new FacebookStrategy({
     clientSecret: process.env.FACEBOOK_APP_SECRET,
     callbackURL: process.env.FACEBOOK_CALLBACK_URL,
     profileFields: ['id', 'displayName', 'emails'],
-}, async (accessToken, refreshToken, profile, done) => {
+}, async (accessToken: string, refreshToken: string, profile: any, done: any) => {
     try {
         let user = await User.findOne({ facebookId: profile.id });
         if (!user) {
@@ -49,11 +49,11 @@ passport.use(new FacebookStrategy({
     }
 }));
 
-passport.serializeUser((user, done) => {
+passport.serializeUser((user: any, done: any) => {
     done(null, user.id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id: string, done: any) => {
     const user = await User.findById(id);
     done(null, user);
 });
