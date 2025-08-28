@@ -28,7 +28,7 @@ app.use(cookieParser());
 
 app.use("/api/auth", require("./routes/auth")); 
 // app.use("/api/social-auth", require("./routes/socialAuth"));
-app.use("/api/users", require("./routes/users")); 
+// app.use("/api/users", require("./routes/users")); 
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
