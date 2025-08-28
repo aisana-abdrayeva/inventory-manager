@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from 'dotenv';
 import session from 'express-session';
 import passport from 'passport';
+import path from 'path';
 
 dotenv.config();
 
@@ -16,6 +17,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'dist')));
 
 // app.use(session({
 //     secret: process.env.SESSION_SECRET,
@@ -26,9 +28,13 @@ app.use(cookieParser());
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-app.use("/api/auth", require("./routes/auth")); 
-// app.use("/api/social-auth", require("./routes/socialAuth"));
-// app.use("/api/users", require("./routes/users")); 
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+})
+
+app.use("/auth", require("./routes/auth")); 
+// app.use("/social-auth", require("./routes/socialAuth"));
+// app.use("/users", require("./routes/users")); 
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
