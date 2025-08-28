@@ -6,6 +6,9 @@ export default defineConfig({
   preview: {
     allowedHosts: ['http://localhost:5000']
   },
+  build: {
+    outDir: 'backend/dist'
+  },
   resolve: {
     alias: {
       '@': '/src'
