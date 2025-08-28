@@ -1,0 +1,103 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserStatus {
+  active
+  blocked
+}
+
+enum UserRole {
+  user
+  admin
+}
+
+model User {
+  id        Int   @id @default(autoincrement())
+  name      String 
+  email     String   @unique
+  passwordHash  String
+  status    UserStatus   @default(active)
+  role UserRole @default(user)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  lastLogin DateTime?
+
+  userInventories UserInventory[] 
+  inventories     Inventory[]
+  comments        Comment[]
+  likes           Like[]
+}
+
+model Inventory {
+  id       Int      @id @default(autoincrement())
+  title   String
+  description String?
+  category String?
+  tags String[]
+  ownerId Int
+  public Boolean
+  imageUrl String?
+  createdAt DateTime @default(now())
+
+  owner   User     @relation(fields: [ownerId], references: [id])
+  userInventories UserInventory[]
+  items       InventoryItem[]
+  comments    Comment[]
+  likes       Like[]
+}
+
+model InventoryItem {
+  id          Int      @id @default(autoincrement())
+  inventoryId Int
+  customId  Int
+  createdById Int      
+  createdAt DateTime @default(now())
+
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+}
+
+model UserInventory {
+  userId      Int
+  inventoryId Int
+  role        String // Example roles: 'read-only', 'write'
+  accessGrantedAt DateTime @default(now())
+  
+  user        User     @relation(fields: [userId], references: [id])
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+
+  @@id([userId, inventoryId])
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  inventoryId Int
+  userId      Int
+  content     String
+  createdAt   DateTime @default(now())
+
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+}
+
+model Like{
+  id         Int      @id @default(autoincrement())
+  inventoryId Int
+  userId      Int 
+
+  inventory   Inventory @relation(fields: [inventoryId], references: [id])
+  user        User      @relation(fields: [userId], references: [id])
+
+  @@unique([inventoryId, userId]) // Ensure a user can like an inventory only once
+}
