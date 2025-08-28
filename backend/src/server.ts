@@ -32,12 +32,12 @@ console.log(path.join(__dirname, 'dist'));
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 // })
-app.use("/auth", require("./routes/auth"));
-app.use("/admin", require("./routes/admin"));
-app.use("/inventories", require("./controllers/inventory"));
-app.use("/items", require("./controllers/item"));
-app.use("/users", require("./controllers/user"));
-app.use("/social-auth", require("./routes/socialAuth"));
+app.use("/api/auth", require("./routes/auth"));
+app.use("/api/admin", require("./routes/admin"));
+// app.use("/inventories", require("./controllers/inventory"));
+// app.use("/items", require("./controllers/item"));
+// app.use("/users", require("./controllers/user"));
+// app.use("/social-auth", require("./routes/socialAuth"));
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
