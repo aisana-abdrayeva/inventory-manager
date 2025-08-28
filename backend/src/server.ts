@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'dist')));
+console.log(path.join(__dirname, 'dist'));
 
 // app.use(session({
 //     secret: process.env.SESSION_SECRET,
@@ -28,13 +29,15 @@ app.use(express.static(path.join(__dirname, 'dist')));
 // app.use(passport.initialize());
 // app.use(passport.session());
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dist', 'index.html'))
-})
-
-app.use("/auth", require("./routes/auth")); 
-// app.use("/social-auth", require("./routes/socialAuth"));
-// app.use("/users", require("./routes/users")); 
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname, 'dist', 'index.html'))
+// })
+app.use("/auth", require("./routes/auth"));
+app.use("/admin", require("./routes/admin"));
+app.use("/inventories", require("./controllers/inventory"));
+app.use("/items", require("./controllers/item"));
+app.use("/users", require("./controllers/user"));
+app.use("/social-auth", require("./routes/socialAuth"));
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
