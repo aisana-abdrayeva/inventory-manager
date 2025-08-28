@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "private": true,
     "scripts": {
-        "build": "tsc -p tsconfig.json && npm install",
+        "build": "tsc -b && npm install",
         "start": "node dist/server.js && prisma generate",
         "dev": "nodemon src/server.ts"
     },
