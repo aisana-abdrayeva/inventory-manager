@@ -5,6 +5,7 @@ const router = express.Router();
 const prisma = new PrismaClient();
 
 router.get("/", authGuard, async (req: any, res: any) => {
+    console.log("👥 [ADMIN GET USERS] Endpoint hit, user:", req.user);
     try {
     const users = await prisma.user.findMany({
         select: {
@@ -17,8 +18,10 @@ router.get("/", authGuard, async (req: any, res: any) => {
         },
         orderBy: { lastLogin: 'desc' },
     });
+    console.log("👥 [ADMIN GET USERS] Users fetched successfully:", users.length, "users");
     res.json(users);
     } catch (error) {
+    console.error("❌ [ADMIN GET USERS] Error fetching users:", error);
     res.status(500).json({ error: "Could not fetch users" });
     }
 });

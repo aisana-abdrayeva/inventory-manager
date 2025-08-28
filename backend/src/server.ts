@@ -32,8 +32,11 @@ console.log(path.join(__dirname, 'dist'));
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(__dirname, 'dist', 'index.html'))
 // })
-app.use("/api/auth", require("./routes/auth"));
-app.use("/api/admin", require("./routes/admin"));
+console.log("🚀 [SERVER] Registering routes...");
+app.use("/auth", require("./routes/auth"));
+console.log("✅ [SERVER] Auth routes registered at /auth");
+app.use("/admin", require("./routes/admin"));
+console.log("✅ [SERVER] Admin routes registered at /admin");
 // app.use("/inventories", require("./controllers/inventory"));
 // app.use("/items", require("./controllers/item"));
 // app.use("/users", require("./controllers/user"));
