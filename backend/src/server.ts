@@ -9,7 +9,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors({
-    origin: ['https://inventory-manager-front-c2r1.onrender.com/', 'http://localhost:3000'],
+    origin: [process.env.FRONTEND_URL || "http://localhost:5173"],
     credentials: true,
 }));
 
