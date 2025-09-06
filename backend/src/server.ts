@@ -27,8 +27,8 @@ app.use(cookieParser());
 // app.use(passport.session());
 
 app.use("/auth", require("./routes/auth")); 
-// app.use("/social-auth", require("./routes/socialAuth"));
-// app.use("/users", require("./routes/users")); 
+app.use("/social-auth", require("./routes/socialAuth"));
+app.use("/users", require("./routes/users")); 
 
 app.listen(process.env.PORT, () => {
     console.log(`Server running on port ${process.env.PORT}`);
