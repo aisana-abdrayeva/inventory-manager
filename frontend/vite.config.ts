@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   preview: {
-    allowedHosts: ['http://localhost:5000']
+    allowedHosts: ['http://localhost:5000', 'https://inventory-manager-72e3.onrender.com']
   },
   resolve: {
     alias: {

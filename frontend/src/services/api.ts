@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:5000", 
+    baseURL: "https://inventory-manager-72e3.onrender.com", 
     withCredentials: true, 
 });
 
